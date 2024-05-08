@@ -8,7 +8,7 @@ function App() {
 
   useEffect(() => {
     // Connect to WebSocket endpoint
-    const socket = new WebSocket('ws://127.0.0.1:15674/ws');
+    const socket = new WebSocket('ws://54.79.168.200:15674/ws');
     const stomp = Stomp.over(socket);
 
     // Connect to STOMP
@@ -17,9 +17,10 @@ function App() {
       setStompClient(stomp);
       
       // Subscribe to topic
-      stomp.subscribe('/topic/messages', (message) => {
+      stomp.subscribe('/queue/suvam', (message) => {
+        console.log("Message---------------", message);
         const newMessage = JSON.parse(message.body);
-        setMessages((prevMessages) => [...prevMessages, newMessage?.message]);
+        setMessages((prevMessages) => [...prevMessages, newMessage?.orderId]);
       });
     });
 
@@ -31,10 +32,9 @@ function App() {
   }, []);
   const sendMessage = () => {
     if (stompClient) {
-      stompClient.send('/queue/my_queue', {}, JSON.stringify({ message: 'Hello RabbitMQ!' }));
+      stompClient.send('/queue/satya', {}, JSON.stringify({ orderId: 'Hello Satya!' }));
     }
   };
-  console.log('MEsagggggggggggggg',messages);
   return (
     <div className="App">
      <div>
